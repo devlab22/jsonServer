@@ -4,14 +4,6 @@ const path = require('path');
 const fs = require('fs');
 const dirname = process.cwd();
 
-const server = jsonServer.create();
-const router = jsonServer.router(path.join(dirname, 'db.json'));
-const middlewares = jsonServer.defaults();
-
-server.use(cors());
-server.use(jsonServer.bodyParser);
-server.use(middlewares);
-server.use(router);
 
 let config = {}
 
@@ -24,8 +16,18 @@ catch (e) {
   
 }
 
+const server = jsonServer.create();
+const router = jsonServer.router(path.join(dirname, config.DB));
+const middlewares = jsonServer.defaults();
+
+server.use(cors());
+server.use(jsonServer.bodyParser);
+server.use(middlewares);
+server.use(router);
+
 const PORT = config.PORT || 3001;
+const HOST = config.HOST || "http://localhost";
 
 server.listen(PORT, () => {
-  console.log(`JSON Server is running on http://localhost:${PORT}`);
+  console.log(`JSON Server is running on ${HOST}:${PORT}`);
 })

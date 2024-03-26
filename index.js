@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const dirname = process.cwd();
-
+const helmet = require('helmet')
 
 let config = {}
 
@@ -17,17 +17,18 @@ catch (e) {
 }
 
 const server = jsonServer.create();
-const router = jsonServer.router(path.join(dirname, config.DB));
+const router = jsonServer.router(path.join(dirname, config.DATABASE));
 const middlewares = jsonServer.defaults();
 
+server.use(helmet())
 server.use(cors());
 server.use(jsonServer.bodyParser);
 server.use(middlewares);
 server.use(router);
 
 const PORT = config.PORT || 3001;
-const HOST = config.HOST || "http://localhost";
+const HOST = config.HOST || "localhost";
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
   console.log(`JSON Server is running on ${HOST}:${PORT}`);
 })
